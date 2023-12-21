@@ -1,0 +1,13 @@
+.sidebar {
+  overflow: auto;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 99vh;
+}
+
+.json-viewer-container {
+  height: 100%;
+  margin-top: 20px;
+}
