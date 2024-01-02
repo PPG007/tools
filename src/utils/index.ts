@@ -30,3 +30,11 @@ export const refreshQuery = (params: QueryParam) => {
   })
   window.history.replaceState({}, '', current);
 }
+
+export const encodeHttpURL = (url: string) => {
+  return encodeURIComponent(url);
+}
+
+export const decodeHttpURL = (url: string) => {
+  return decodeURIComponent(url);
+}
