@@ -1,8 +1,8 @@
 import { Card, DatePicker, Flex, Input, InputNumber, Select, Space } from 'antd';
-import { CardTabListType } from 'antd/es/card';
-import { FC, ReactNode, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { ObjectID } from 'bson';
 import dayjs from 'dayjs';
+import { CardTab } from '../types.ts';
 
 interface Date {
   type: 'second' | 'millisecond';
@@ -230,10 +230,6 @@ const ObjectId: FC = () => {
       </Space>
     </Flex>
   )
-}
-
-interface CardTab extends CardTabListType {
-  content?: ReactNode;
 }
 
 const tabs: Array<CardTab> = [

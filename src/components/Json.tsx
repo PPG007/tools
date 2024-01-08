@@ -1,5 +1,5 @@
 import TextArea from 'antd/es/input/TextArea';
-import { Flex, Checkbox, Space, Result, Select } from 'antd';
+import { Flex, Checkbox, Space, Result, Select, Card, Button, App } from 'antd';
 import { CSSProperties, FC, useEffect, useRef, useState } from 'react';
 import JsonView, { JsonViewProps } from '@uiw/react-json-view';
 import { CheckboxChangeEvent } from 'antd/es/checkbox';
@@ -13,6 +13,8 @@ import { vscodeTheme } from '@uiw/react-json-view/vscode';
 import { gruvboxTheme } from '@uiw/react-json-view/gruvbox';
 import { monokaiTheme } from '@uiw/react-json-view/monokai';
 import { basicTheme } from '@uiw/react-json-view/basic';
+import { CardTab, getTabContent } from '../types.ts';
+import { copyToClipboard } from '../utils';
 
 const getTheme = (name: string) => {
   switch (name) {
@@ -39,12 +41,12 @@ const getTheme = (name: string) => {
 
 const Viewer: FC<{ input: string }> = ({ input }) => {
   const [props, setProps] = useState<JsonViewProps<object>>({
-    objectSortKeys: true,
-    displayObjectSize: true,
-    displayDataTypes: true,
-    enableClipboard: true,
+    objectSortKeys: false,
+    displayObjectSize: false,
+    displayDataTypes: false,
+    enableClipboard: false,
     value: {},
-    style: githubDarkTheme,
+    style: lightTheme,
   });
   const [error, setError] = useState('githubDarkTheme');
   const ref = useRef(null);
@@ -148,11 +150,11 @@ const Viewer: FC<{ input: string }> = ({ input }) => {
 
 const textareaStyle: CSSProperties = {
   width: '80vh',
-  height: '99vh',
+  height: '88vh',
   marginLeft: '10px',
 };
 
-const Json: FC = () => {
+const JsonFormatter: FC = () => {
   const [input, setInput] = useState('');
   return (
     <Flex gap={'large'} align={'center'} justify={'space-around'}>
@@ -169,6 +171,63 @@ const Json: FC = () => {
         <Viewer input={input} />
       </div>
     </Flex>
+  );
+}
+
+const JsonZipper: FC = () => {
+  const [input, setInput] = useState('');
+  const { message } = App.useApp();
+  const onZip = () => {
+    setInput(input.replace(/[\n\t\r\s]/g, ''));
+  }
+  const onCopy = async () => {
+    await copyToClipboard(input);
+    message.success('copied');
+  }
+  return (
+    <Flex gap={'large'} align={'center'} justify={'space-between'}>
+      <TextArea
+        value={input}
+        onChange={(e) => {
+          setInput(e.target.value);
+        }}
+        styles={{
+          textarea: textareaStyle,
+        }}
+      />
+      <Flex gap={'large'} align={'center'} justify={'center'} style={{width: textareaStyle.width}}>
+        <Button type={'primary'} size={'large'} onClick={onZip}>压缩</Button>
+        <Button type={'primary'} size={'large'} onClick={onCopy}>copy</Button>
+      </Flex>
+    </Flex>
+  )
+}
+
+const tabs: Array<CardTab> = [
+  {
+    key: 'formatter',
+    label: '格式化',
+    content: <JsonFormatter />,
+  },
+  {
+    key: 'zipper',
+    label: '压缩',
+    content: <JsonZipper />,
+  },
+];
+
+const Json: FC = () => {
+  const [tab, setTab] = useState(tabs[0].key);
+  return (
+    <Card
+      tabList={tabs}
+      activeTabKey={tab}
+      onTabChange={(key) => {
+        setTab(key);
+      }}
+    >
+      {getTabContent(tabs, tab)}
+    </Card>
   );
 };
 

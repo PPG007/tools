@@ -38,3 +38,7 @@ export const encodeHttpURL = (url: string) => {
 export const decodeHttpURL = (url: string) => {
   return decodeURIComponent(url);
 }
+
+export const copyToClipboard = (content: string) => {
+  return navigator.clipboard.writeText(content)
+}
