@@ -3,6 +3,7 @@ import Base64 from "./Base64";
 import Json from "./Json";
 import UUID from "./UUID";
 import URL from './URL.tsx';
+import ObjectId from './ObjectId.tsx';
 
 export {
   Time,
@@ -10,4 +11,5 @@ export {
   Json,
   UUID,
   URL,
+  ObjectId,
 }

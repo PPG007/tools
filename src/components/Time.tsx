@@ -1,6 +1,5 @@
 import { Card, DatePicker, Flex, Input, InputNumber, Select, Space } from 'antd';
 import { FC, useEffect, useState } from 'react';
-import { ObjectID } from 'bson';
 import dayjs from 'dayjs';
 import { CardTab } from '../types.ts';
 
@@ -158,80 +157,6 @@ const ISO: FC = () => {
   )
 }
 
-interface ObjectIdInput {
-  objectId: string;
-  time: dayjs.Dayjs | null;
-}
-
-const ObjectId: FC = () => {
-  const [input, setInput] = useState<ObjectIdInput>({
-    objectId: '',
-    time: null,
-  })
-  const parseObjectId = () => {
-    if (ObjectID.isValid(input.objectId)) {
-      return ObjectID.createFromHexString(input.objectId).getTimestamp().toISOString()
-    }
-    return '';
-  }
-
-  const genObjectId = () => {
-    if (input.time) {
-      return ObjectID.createFromTime(input.time.unix()).toHexString();
-    }
-    return ''
-  }
-  return (
-    <Flex
-      gap={'large'}
-      vertical={true}
-      align={'center'}
-      justify={'center'}
-    >
-      <Space align={'center'} size={'large'}>
-        <Input
-          value={input.objectId}
-          onChange={(e) => {
-            setInput({
-              ...input,
-              objectId: e.target.value,
-            })
-          }}
-          style={{
-            width: '250px'
-          }}
-        />
-        <span>对应的时间为：</span>
-        <Input
-          readOnly
-          value={parseObjectId()}
-          style={{
-            width: '250px'
-          }}
-        />
-      </Space>
-      <Space align={'center'} size={'large'}>
-        <DatePicker
-          format={'YYYY-MM-DD HH:mm:ss'}
-          showTime
-          onChange={(time) => {setInput({...input, time})}}
-          style={{
-            width: '250px'
-          }}
-        />
-        <span>此时间对应的 objectId：</span>
-        <Input
-          readOnly
-          value={genObjectId()}
-          style={{
-            width: '250px'
-          }}
-        />
-      </Space>
-    </Flex>
-  )
-}
-
 const tabs: Array<CardTab> = [
   {
     key: 'unix',
@@ -242,11 +167,6 @@ const tabs: Array<CardTab> = [
     key: 'iso',
     label: 'ISO8601',
     content: <ISO />,
-  },
-  {
-    key: 'objectId',
-    label: 'ObjectId',
-    content: <ObjectId />,
   },
 ];
 

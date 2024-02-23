@@ -2,7 +2,7 @@ import { Layout, Menu } from 'antd';
 import { MenuItemType } from 'antd/es/menu/hooks/useItems';
 import { FC, useState, ReactNode, useEffect } from 'react';
 import style from './style/app.module.css';
-import { Base64, URL, Json, Time, UUID } from './components';
+import { Base64, URL, Json, Time, UUID, ObjectId } from './components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { getQueryParam, refreshQuery } from './utils';
 
@@ -39,6 +39,11 @@ const items: Array<MenuItem> = [
     label: 'URL',
     content: <URL />,
   },
+  {
+    key: 'objectId',
+    label: 'ObjectId',
+    content: <ObjectId />,
+  }
 ];
 
 const getContent = (key: string) => {
