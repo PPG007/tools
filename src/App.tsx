@@ -2,7 +2,7 @@ import { Layout, Menu } from 'antd';
 import { MenuItemType } from 'antd/es/menu/hooks/useItems';
 import { FC, useState, ReactNode, useEffect } from 'react';
 import style from './style/app.module.css';
-import { Base64, URL, Json, Time, UUID, ObjectId } from './components';
+import {Base64, URL, Json, Time, UUID, ObjectId, PointDistance} from './components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { getQueryParam, refreshQuery } from './utils';
 
@@ -43,6 +43,11 @@ const items: Array<MenuItem> = [
     key: 'objectId',
     label: 'ObjectId',
     content: <ObjectId />,
+  },
+  {
+    key: 'pointDistance',
+    label: '经纬度距离计算',
+    content: <PointDistance />,
   }
 ];
 

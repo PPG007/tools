@@ -4,6 +4,7 @@ import Json from "./Json";
 import UUID from "./UUID";
 import URL from './URL.tsx';
 import ObjectId from './ObjectId.tsx';
+import PointDistance from "./PointDistance.tsx";
 
 export {
   Time,
@@ -12,4 +13,5 @@ export {
   UUID,
   URL,
   ObjectId,
+  PointDistance,
 }
