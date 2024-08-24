@@ -1,12 +1,12 @@
 import { Layout, Menu } from 'antd';
 import { MenuItemType } from 'antd/es/menu/hooks/useItems';
-import { FC, useState, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import style from './style/app.module.css';
-import {Base64, URL, Json, Time, UUID, ObjectId, PointDistance} from './components';
+import { Base64, Crypto, Json, ObjectId, PointDistance, Time, URL, UUID } from './components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { getQueryParam, refreshQuery } from './utils';
 
-const { Sider, Content } = Layout;
+const {Sider, Content} = Layout;
 
 interface MenuItem extends MenuItemType {
   content?: ReactNode;
@@ -16,38 +16,43 @@ const items: Array<MenuItem> = [
   {
     key: 'time',
     label: '时间',
-    icon: <ClockCircleOutlined />,
-    content: <Time />,
+    icon: <ClockCircleOutlined/>,
+    content: <Time/>,
   },
   {
     key: 'base64',
     label: 'base64',
-    content: <Base64 />,
+    content: <Base64/>,
   },
   {
     key: 'json',
     label: 'JSON',
-    content: <Json />,
+    content: <Json/>,
   },
   {
     key: 'uuid',
     label: 'UUID',
-    content: <UUID />,
+    content: <UUID/>,
   },
   {
     key: 'url',
     label: 'URL',
-    content: <URL />,
+    content: <URL/>,
   },
   {
     key: 'objectId',
     label: 'ObjectId',
-    content: <ObjectId />,
+    content: <ObjectId/>,
   },
   {
     key: 'pointDistance',
     label: '经纬度距离计算',
-    content: <PointDistance />,
+    content: <PointDistance/>,
+  },
+  {
+    key: 'crypto',
+    label: '哈希计算',
+    content: <Crypto/>,
   }
 ];
 
@@ -82,7 +87,7 @@ const App: FC = () => {
           items={items}
           mode={'inline'}
           theme={'dark'}
-          onSelect={({ key }) => {
+          onSelect={({key}) => {
             setMenuKey(key);
           }}
           selectedKeys={[menuKey]}
