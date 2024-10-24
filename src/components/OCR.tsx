@@ -1,6 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import { Button, Flex, Image, Result, Space, Spin, Upload } from 'antd';
-import { createWorker, Worker } from 'tesseract.js';
+import { FC, useEffect, useState } from 'react';
+import { Button, Flex, Image, Modal, Result, Space, Spin, Transfer, Upload } from 'antd';
+import { recognize } from 'tesseract.js';
 import { defaultImage } from '../utils';
 import TextArea from 'antd/es/input/TextArea';
 import { UploadOutlined } from '@ant-design/icons';
@@ -9,6 +9,15 @@ interface Image {
   blob: Blob;
   url: string;
 }
+
+const supportedLanguages: {
+  [key: string]: string;
+} = {
+  eng: '英语',
+  chi_sim: '简体中文',
+  chi_tra: '繁体中文',
+  jpn: '日语',
+};
 
 const readImageFromClipboard = async (): Promise<Image | undefined> => {
   const items = await navigator.clipboard.read();
@@ -47,7 +56,7 @@ const ImageUploader: FC<{ setImage?: (image: Image) => void }> = ({setImage}) =>
           icon={<UploadOutlined/>}
           size={'large'}
         >
-          select image from file
+          从文件中选择图片
         </Button>
       </Upload>
     </>
@@ -68,7 +77,7 @@ const ImageDisplayer: FC<{ image?: Image }> = ({image}) => {
   return (
     <Result
       status={'warning'}
-      title={'please select image'}
+      title={'选择一张图片以识别'}
       style={{
         height,
         width
@@ -77,33 +86,64 @@ const ImageDisplayer: FC<{ image?: Image }> = ({image}) => {
   );
 };
 
+const LanguageSelector: FC<{
+  languages: Array<string>;
+  setLanguages: (languages: Array<string>) => void;
+  show: boolean;
+  onModalClose: () => void;
+}> = ({languages, setLanguages, show, onModalClose}) => {
+  const [selectedLanguages, setSelectedLanguages] = useState(languages);
+  return (
+    <Modal
+      open={show}
+      onOk={() => {
+        setLanguages(selectedLanguages);
+        onModalClose();
+      }}
+      onCancel={() => {
+        setSelectedLanguages(languages);
+        onModalClose();
+      }}
+    >
+      <Transfer
+        dataSource={Object.keys(supportedLanguages).map((language) => {
+          const languageName = supportedLanguages[language];
+          return {
+            key: language,
+            title: languageName,
+          };
+        })}
+        titles={['可选语言', '已选语言']}
+        showSelectAll={false}
+        render={(item) => (item.title)}
+        targetKeys={selectedLanguages}
+        onChange={(target) => {
+          setSelectedLanguages(target);
+        }}
+      />
+    </Modal>
+  );
+};
+
 const OCR: FC = () => {
   const [image, setImage] = useState<Image | undefined>();
   const [isLoading, setIsLoading] = useState(false);
   const [resultText, setResultText] = useState('');
-  const worker = useRef<Worker>();
+  const [isModalShowing, setIsModalShowing] = useState(false);
+  const [languages, setLanguages] = useState<Array<string>>(() => {
+    return ['eng'];
+  });
   useEffect(() => {
-    setIsLoading(true);
-    createWorker(['eng', 'chi_sim']).then((result) => {
-      worker.current = result;
-    }).finally(() => {
-      setIsLoading(false);
-    });
-    return () => {
-      worker.current?.terminate();
-    };
-  }, []);
-  useEffect(() => {
-    if (!image || !worker.current) {
+    if (!image || !languages.length) {
       return;
     }
     setIsLoading(true);
-    worker.current.recognize(image.blob).then(({data: {text}}) => {
+    recognize(image.blob, languages.join('+')).then(({data: {text}}) => {
       setResultText(text);
     }).finally(() => {
       setIsLoading(false);
     });
-  }, [image]);
+  }, [image, languages]);
   return (
     <Spin
       spinning={isLoading}
@@ -121,6 +161,14 @@ const OCR: FC = () => {
         vertical
       >
         <ImageDisplayer image={image}/>
+        <LanguageSelector
+          languages={languages}
+          setLanguages={setLanguages}
+          show={isModalShowing}
+          onModalClose={() => {
+            setIsModalShowing(false);
+          }}
+        />
         <Space size={'large'}>
           <Button
             type={'primary'}
@@ -129,10 +177,19 @@ const OCR: FC = () => {
             }}
             size={'large'}
           >
-            paste from clipboard
+            从剪切板读取图片
           </Button>
-          OR
+          或
           <ImageUploader setImage={setImage}/>
+          <Button
+            type={'dashed'}
+            size={'large'}
+            onClick={() => {
+              setIsModalShowing(true);
+            }}
+          >
+            选择目标语言，当前为 {languages.map((language) => (supportedLanguages[language])).join('、')}
+          </Button>
         </Space>
         <TextArea
           styles={{
