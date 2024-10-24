@@ -6,6 +6,7 @@ import URL from './URL.tsx';
 import ObjectId from './ObjectId.tsx';
 import PointDistance from './PointDistance.tsx';
 import Crypto from './Crypto.tsx';
+import OCR from './OCR.tsx';
 
 export {
   Time,
@@ -16,4 +17,5 @@ export {
   ObjectId,
   PointDistance,
   Crypto,
+  OCR,
 };
