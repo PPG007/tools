@@ -2,7 +2,7 @@ import { Layout, Menu } from 'antd';
 import { MenuItemType } from 'antd/es/menu/hooks/useItems';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import style from './style/app.module.css';
-import { Base64, Crypto, Json, ObjectId, OCR, PointDistance, Time, URL, UUID } from './components';
+import { Base64, Crypto, Json, ObjectId, OCR, PointDistance, Tax, Time, URL, UUID } from './components';
 import { ClockCircleOutlined } from '@ant-design/icons';
 import { getQueryParam, refreshQuery } from './utils';
 
@@ -58,6 +58,11 @@ const items: Array<MenuItem> = [
     key: 'ocr',
     label: 'OCR',
     content: <OCR/>,
+  },
+  {
+    key: 'tax',
+    label: '个税计算',
+    content: <Tax/>,
   },
 ];
 

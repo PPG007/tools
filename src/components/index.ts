@@ -7,6 +7,7 @@ import ObjectId from './ObjectId.tsx';
 import PointDistance from './PointDistance.tsx';
 import Crypto from './Crypto.tsx';
 import OCR from './OCR.tsx';
+import Tax from './Tax.tsx';
 
 export {
   Time,
@@ -18,4 +19,5 @@ export {
   PointDistance,
   Crypto,
   OCR,
+  Tax,
 };
