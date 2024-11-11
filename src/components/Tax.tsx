@@ -215,6 +215,7 @@ const Tax: FC = () => {
             onChange={(v) => {
               if (v) {
                 setFixedDeductAmount(round(v));
+                return;
               }
               setFixedDeductAmount(0);
             }}
