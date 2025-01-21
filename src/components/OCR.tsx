@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { Button, Flex, Image, Modal, Result, Space, Spin, Transfer, Upload } from 'antd';
+import { Button, Flex, Image, Modal, Result, Space, Spin, Switch, Transfer, Upload } from 'antd';
 import { recognize } from 'tesseract.js';
 import { defaultImage } from '../utils';
 import TextArea from 'antd/es/input/TextArea';
@@ -133,8 +133,9 @@ const OCR: FC = () => {
   const [languages, setLanguages] = useState<Array<string>>(() => {
     return ['eng'];
   });
+  const [isRecognizeAuto, setIsRecognizeAuto] = useState(true);
   useEffect(() => {
-    if (!image || !languages.length) {
+    if (!image || !languages.length || !isRecognizeAuto) {
       return;
     }
     setIsLoading(true);
@@ -143,7 +144,7 @@ const OCR: FC = () => {
     }).finally(() => {
       setIsLoading(false);
     });
-  }, [image, languages]);
+  }, [image, languages, isRecognizeAuto]);
   return (
     <Spin
       spinning={isLoading}
@@ -190,6 +191,13 @@ const OCR: FC = () => {
           >
             选择目标语言，当前为 {languages.map((language) => (supportedLanguages[language])).join('、')}
           </Button>
+          <Switch
+            checked={isRecognizeAuto}
+            onChange={(b) => {
+              setIsRecognizeAuto(b);
+            }}
+            checkedChildren={'自动识别'}
+          />
         </Space>
         <TextArea
           styles={{
